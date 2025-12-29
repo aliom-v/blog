@@ -217,5 +217,41 @@
       navigator.serviceWorker.register('/sw.js').catch(function() {});
     });
   }
+
+  // ============ KaTeX 数学公式渲染 ============
+  (function() {
+    // 加载 KaTeX
+    var loadKaTeX = function() {
+      var script = document.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
+      script.integrity = 'sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUbKyIyUH';
+      script.crossOrigin = 'anonymous';
+      script.onload = function() {
+        // 加载 auto-render 扩展
+        var renderScript = document.createElement('script');
+        renderScript.src = 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js';
+        renderScript.integrity = 'sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbCMRDagBwe0uE8e7+m3rjCzHw';
+        renderScript.crossOrigin = 'anonymous';
+        renderScript.onload = function() {
+          renderMathInElement(document.body, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError: false
+          });
+        };
+        document.head.appendChild(renderScript);
+      };
+      document.head.appendChild(script);
+    };
+
+    // 只在包含公式的页面加载 KaTeX
+    if (document.body.innerHTML.includes('$') || document.body.innerHTML.includes('\\\\[')) {
+      loadKaTeX();
+    }
+  })();
 })();
 </script>
